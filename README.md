@@ -12,9 +12,11 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [mse]: ./fig/mse.png "Training and validation error"
-[image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
+[bridge]: ./fig/bridge.png "Bridge"
+[corner]: ./fig/corner.png "Corner"
+[center]: ./fig/center_2016_12_01_13_31_13_037.jpg "Center image"
+[left]: ./fig/left_2016_12_01_13_31_13_037.jpg "Left image"
+[right]: ./fig/right_2016_12_01_13_31_13_037.jpg "Right image"
 [image5]: ./examples/placeholder_small.png "Recovery Image"
 [image6]: ./examples/placeholder_small.png "Normal Image"
 [image7]: ./examples/placeholder_small.png "Flipped Image"
@@ -110,8 +112,9 @@ Accessed 12 Mar. 2017.
 
 I use the following parameters to train the model:
 
+- Validation split: 20% of the data
 - Batch size: 32
-- Number of epochs: 5
+- Number of epochs: 8
 - Optimizer: Adam
 
 The model used an adam optimizer, so the learning rate was not tuned manually.
@@ -119,9 +122,50 @@ The model used an adam optimizer, so the learning rate was not tuned manually.
 ## Training Strategy
 
 To find the solution, I took an iterative approach. First, I traind the base
-model with normalized data set, that provided by Udacity. However, the car
-driven by the model did not work well. Then I added modified data and newly
-collected data. Consequently, I successfully created my model.
+model with the data set, that provided by Udacity. However, the car driven by
+the model did not work well. Then I added modified data and newly collected
+data. Consequently, I successfully created my model.
+
+In the whole step of my trial and error, the images were cropped to remove the
+background on the upper side and the hood of the car on the lower side, and
+normalized.
+
+In the first trial, I used the model descrived above and the data set provided
+by Udacity. The driver based on the trained model tended to go to the left.
+I thought that this might be due to the fact that the provided data set contains
+many left curves than right curves.
+
+In the next step, I added flipped images to the original data set. The model
+trained by the augmented data set could run the car straight on the simulator.
+However the car stucked on the bridge at the middle of the course.
+
+![Bridge][bridge]
+
+I thought that the model could not trained well for crossing the bridge because
+the number of the images that captured the scenery of the bridge was relativery
+small than one of the images that captured other part of the course.
+
+In the next step, I added some images that were recorded the scenes of crossing
+the bridge for the data set. The model trained by the augmented data set
+successfully run the car on the bridge. However, it failed to turn around a
+corner following the bridge, and went straight.
+
+![Corner][corner]
+
+Certainly there was a way to go straight, but I wanted the car to turn to the
+left.
+
+To fix this, I added some images that were recorded the scenes of passing the
+corner for the data set. The model trained by the augmented data set
+successfully passed the corner.
+
+Finally, I added some images to the data set to make the car run smoothly.
+The simulator run in training mode could capture images that were took from
+different positions as shown below.
+
+|Left image   |Center image     |Right image    |
+|-------------|-----------------|---------------|
+|![Left][left]|![Center][center]|![Right][right]|
 
 ####1. An appropriate model architecture has been employed
 
