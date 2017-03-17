@@ -8,7 +8,6 @@ The goals / steps of this project are the following:
 - Test that the model successfully drives around track one without leaving the road
 - Summarize the results with a written report
 
-
 [//]: # (Image References)
 
 [mse]: ./fig/mse.png "Training and validation error"
@@ -17,10 +16,6 @@ The goals / steps of this project are the following:
 [center]: ./fig/center_2016_12_01_13_31_13_037.jpg "Center image"
 [left]: ./fig/left_2016_12_01_13_31_13_037.jpg "Left image"
 [right]: ./fig/right_2016_12_01_13_31_13_037.jpg "Right image"
-[image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
-
 
 ## Files Submitted
 
@@ -44,7 +39,7 @@ Here is a [link](https://youtu.be/JiSAV5L6wCc) to a video recorded using my mode
 
 ## Model Architecture
 
-My model based on the NVIDIA's model[^nvidia] (model.py lines 32-46). The changes
+My model based on the NVIDIA's model[[1](#nvidia)] (model.py lines 32-46). The changes
 from the base model are the insertion of the cropping layers following the
 normalization layer and the dropout layers following fully connected layers
 (model.py lines 41, 43, 45).
@@ -103,11 +98,6 @@ Non-trainable params: 0
 ____________________________________________________________________________________________________
 ```
 
-[^nvidia]: Firner, Ben et al. “End-to-End Deep Learning for Self-Driving Cars.”
-Parallel Forall, Nvidia, 25 Aug. 2016,
-devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/.
-Accessed 12 Mar. 2017.
-
 ## Model parameter
 
 I use the following parameters to train the model:
@@ -135,9 +125,10 @@ by Udacity. The driver based on the trained model tended to go to the left.
 I thought that this might be due to the fact that the provided data set contains
 many left curves than right curves.
 
-In the next step, I added flipped images to the original data set. The model
-trained by the augmented data set could run the car straight on the simulator.
-However the car stucked on the bridge at the middle of the course.
+In the next step, I added flipped images to the original data set
+(model.py lines 104-106). The model trained by the augmented data set could run
+the car straight on the simulator. However the car stucked on the bridge at the
+middle of the course.
 
 ![Bridge][bridge]
 
@@ -167,78 +158,19 @@ different positions as shown below.
 |-------------|-----------------|---------------|
 |![Left][left]|![Center][center]|![Right][right]|
 
-####1. An appropriate model architecture has been employed
+In this step, I used whole three kind of images for training my model though
+I used only the center image up to the previous step. Concretely, I added the
+left images along with the steering angle that is added 0.05 to the original
+angle (model.py lines 92-96), and the right images along with the steering
+angle that is subtracted 0.05 from the original angle (model.py lines 98-102).
+These mean that the car should go right when it on the left side of the road,
+and should go left when it on the right side of the road. As a result, the
+car could run smoothly on the track 1 of the simulator.
 
-My model consists of a convolution neural network with 3x3 filter sizes and depths between 32 and 128 (model.py lines 18-24) 
+## Reference
 
-The model includes RELU layers to introduce nonlinearity (code line 20), and the data is normalized in the model using a Keras lambda layer (code line 18). 
-
-####2. Attempts to reduce overfitting in the model
-
-The model contains dropout layers in order to reduce overfitting (model.py lines 21). 
-
-The model was trained and validated on different data sets to ensure that the model was not overfitting (code line 10-16). The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
-
-####3. Model parameter tuning
-
-The model used an adam optimizer, so the learning rate was not tuned manually (model.py line 25).
-
-####4. Appropriate training data
-
-Training data was chosen to keep the vehicle driving on the road. I used a combination of center lane driving, recovering from the left and right sides of the road ... 
-
-For details about how I created the training data, see the next section. 
-
-## Model Architecture and Training Strategy
-
-####1. Solution Design Approach
-
-The overall strategy for deriving a model architecture was to ...
-
-My first step was to use a convolution neural network model similar to the ... I thought this model might be appropriate because ...
-
-In order to gauge how well the model was working, I split my image and steering angle data into a training and validation set. I found that my first model had a low mean squared error on the training set but a high mean squared error on the validation set. This implied that the model was overfitting. 
-
-To combat the overfitting, I modified the model so that ...
-
-Then I ... 
-
-The final step was to run the simulator to see how well the car was driving around track one. There were a few spots where the vehicle fell off the track... to improve the driving behavior in these cases, I ....
-
-At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
-
-####2. Final Model Architecture
-
-The final model architecture (model.py lines 18-24) consisted of a convolution neural network with the following layers and layer sizes ...
-
-Here is a visualization of the architecture (note: visualizing the architecture is optional according to the project rubric)
-
-![alt text][image1]
-
-####3. Creation of the Training Set & Training Process
-
-To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
-
-![alt text][image2]
-
-I then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to .... These images show what a recovery looks like starting from ... :
-
-![alt text][image3]
-![alt text][image4]
-![alt text][image5]
-
-Then I repeated this process on track two in order to get more data points.
-
-To augment the data sat, I also flipped images and angles thinking that this would ... For example, here is an image that has then been flipped:
-
-![alt text][image6]
-![alt text][image7]
-
-Etc ....
-
-After the collection process, I had X number of data points. I then preprocessed this data by ...
-
-
-I finally randomly shuffled the data set and put Y% of the data into a validation set. 
-
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was Z as evidenced by ... I used an adam optimizer so that manually training the learning rate wasn't necessary.
+- <a name="nvidia">[1]
+  Firner, Ben et al. “End-to-End Deep Learning for Self-Driving Cars.”
+  Parallel Forall, Nvidia, 25 Aug. 2016,
+  devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/.
+  Accessed 12 Mar. 2017.
